@@ -75,3 +75,6 @@ runs:
     - ${{ inputs.pr_title }}
     - ${{ inputs.pr_label }}
     - ${{ inputs.pr_description_text }}
+branding:
+  icon: 'git-pull-request'
+  color: 'blue'
