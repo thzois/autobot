@@ -1,68 +1,68 @@
-# name: 🔖 Release
+name: 🔖 Release
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   release:
-#     permissions: write-all
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Check out source code
-#         uses: actions/checkout@v3.2.0
-#         with:
-#           fetch-depth: 0
+jobs:
+  release:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v3.2.0
+        with:
+          fetch-depth: 0
 
-#       - name: Get latest tag
-#         uses: WyriHaximus/github-action-get-previous-tag@v1.3.0
-#         id: previous_version
-#         with:
-#           prefix: v
+      - name: Get latest tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1.3.0
+        id: previous_version
+        with:
+          prefix: v
 
-#       - name: Bump version and push tag
-#         uses: anothrNick/github-tag-action@1.55.0
-#         id: bump_version
-#         env:
-#           GITHUB_TOKEN: ${{ github.token }}
-#           WITH_V: true
-#           RELEASE_BRANCHES: main
-#           # custom tagging policy adapted to conventional commits
-#           MAJOR_STRING_TOKEN: feat!
-#           MINOR_STRING_TOKEN: feat
-#           DEFAULT_BUMP: patch
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.55.0
+        id: bump_version
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          WITH_V: true
+          RELEASE_BRANCHES: main
+          # custom tagging policy adapted to conventional commits
+          MAJOR_STRING_TOKEN: feat!
+          MINOR_STRING_TOKEN: feat
+          DEFAULT_BUMP: patch
 
-#       - name: Build changelog
-#         id: build_changelog
-#         uses: mikepenz/release-changelog-builder-action@v3.4.0
-#         env:
-#           GITHUB_TOKEN: ${{ github.token }}
-#         with:
-#           fromTag: ${{ steps.previous_version.outputs.tag }}
-#           toTag: ${{ steps.bump_version.outputs.new_tag }}
-#           configurationJson: |
-#             {
-#               "sort": "DESC",
-#               "template": "## What’s Changed\n\n#{{UNCATEGORIZED}}",
-#               "pr_template": "* #{{TITLE}} (##{{NUMBER}})",
-#               "empty_template": "no changes"
-#             }
+      - name: Build changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v3.4.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          fromTag: ${{ steps.previous_version.outputs.tag }}
+          toTag: ${{ steps.bump_version.outputs.new_tag }}
+          configurationJson: |
+            {
+              "sort": "DESC",
+              "template": "## What’s Changed\n\n#{{UNCATEGORIZED}}",
+              "pr_template": "* #{{TITLE}} (##{{NUMBER}})",
+              "empty_template": "no changes"
+            }
 
-#       - name: Verify changelog
-#         shell: bash
-#         run: |
-#           if [[ '${{ steps.build_changelog.outputs.failed }}' == 'true' ]]; then
-#             echo 'Error during building the changelog'
-#             exit 1
-#           fi
+      - name: Verify changelog
+        shell: bash
+        run: |
+          if [[ '${{ steps.build_changelog.outputs.failed }}' == 'true' ]]; then
+            echo 'Error during building the changelog'
+            exit 1
+          fi
 
-#       - name: Create release
-#         uses: softprops/action-gh-release@v1
-#         with:
-#           prerelease: false
-#           draft: false
-#           name: "Release ${{ steps.bump_version.outputs.new_tag }}"
-#           tag_name: ${{ steps.bump_version.outputs.new_tag }}
-#           body: ${{ steps.build_changelog.outputs.changelog }}
-#           token: ${{ github.token }}
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: false
+          draft: false
+          name: "Release ${{ steps.bump_version.outputs.new_tag }}"
+          tag_name: ${{ steps.bump_version.outputs.new_tag }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+          token: ${{ github.token }}
