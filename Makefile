@@ -15,7 +15,7 @@ help:
 all: # @HELP runs pre-commit checks
 all: check
 
-.PHONY: check
-check: # @HELP runs pre-commit checks
-check:
+.PHONY: pre-commit
+pre-commit: # @HELP runs pre-commit checks
+pre-commit:
 	@pre-commit run --all
