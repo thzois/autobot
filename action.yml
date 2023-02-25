@@ -1,5 +1,5 @@
 ---
-name: Autobot
+name: autobot
 description: >
   Raise a pull request to another repository
 
