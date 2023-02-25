@@ -1,0 +1,77 @@
+---
+name: Autobot
+description: >
+  Raise a pull request to another repository
+
+inputs:
+  git_config_user_email:
+    description: >
+      The email of the user who will commit the changes
+    required: true
+
+  git_config_user_name:
+    description: >
+      The username of the user who will commit the changes
+    required: true
+
+  source_dir:
+    description: >
+      Source repository directory to copy the files from
+    required: true
+
+  source_dir_copy_glob:
+    description: >
+      During copying, you can use globbing to control the patterns that will be copied to the
+      directory of the target repo. By default extglob, dotglob and globstar are enabled
+    required: false
+
+  target_repo:
+    description: >
+      Target repository to copy the files to
+    required: true
+
+  target_dir:
+    description: >
+      Target repository directory where the files copied from the source directory will be pushed
+    required: true
+
+  pr_target_repo_base_branch:
+    description: >
+      The branch name in which the code will be merged
+    default: 'main'
+
+  pr_target_repo_compare_branch:
+    description: >
+      The branch name where the changes will be pushed
+    required: false
+
+  pr_title:
+    description: >
+      Pull request title
+    required: false
+
+  pr_label:
+    description: >
+      The label to assign to the pull request
+    default: 'autobot'
+
+  pr_description_text:
+    description: >
+      Pull request description text
+    required: false
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.git_config_user_email }}
+    - ${{ inputs.git_config_user_name }}
+    - ${{ inputs.source_dir }}
+    - ${{ inputs.source_dir_copy_glob }}
+    - ${{ inputs.target_repo }}
+    - ${{ inputs.target_dir }}
+    - ${{ inputs.pr_target_repo_base_branch }}
+    - ${{ inputs.pr_target_repo_compare_branch }}
+    - ${{ inputs.pr_title }}
+    - ${{ inputs.pr_label }}
+    - ${{ inputs.pr_description_text }}

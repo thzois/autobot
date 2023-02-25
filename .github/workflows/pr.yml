@@ -1,0 +1,22 @@
+name: 🔬 PR Analysis
+
+on:
+  pull_request:
+
+jobs:
+  pr-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Triage PR title
+        if: ${{ startsWith(github.head_ref, 'dependabot/') != true }}
+        uses: aslafy-z/conventional-pr-title-action@v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Check out source code
+        uses: actions/checkout@v3.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Run .pre-commit-config.yaml
+        uses: pre-commit/action@v3.0.0
